@@ -1,0 +1,104 @@
+.game-line {
+  --line-red: #fe7f78;
+  --line-blue: #04d6ff;
+  --box-red: #ff5f58;
+  --box-blue: #03c9f3;
+  position: absolute;
+  -webkit-tap-highlight-color: transparent;
+  background-color: rgba(255, 255, 255, 0.7);
+  border: none;
+  cursor: pointer;
+}
+
+.game-line.selected.horizontal {
+  --final-background-size: 0 100%;
+  background-image: linear-gradient(var(--line-color), var(--line-color));
+  background-repeat: no-repeat;
+  background-size: var(--final-background-size);
+  background-position: 50% 0;
+  animation: expandBackground var(--time-expand-line) ease forwards;
+  animation-delay: var(--line-delay, 0);
+}
+
+.game-line.selected.vertical {
+  --final-background-size: 100% 0;
+  background-image: linear-gradient(var(--line-color), var(--line-color));
+  background-repeat: no-repeat;
+  background-size: var(--final-background-size);
+  background-position: 0 50%;
+  animation: expandBackground var(--time-expand-line) ease forwards;
+  animation-delay: var(--line-delay, 0);
+}
+
+.game-line.completed.horizontal,
+.game-line.completed.vertical {
+  background-image: none;
+  background-color: rgba(65, 67, 66, 0.95);
+}
+
+.game-line.horizontal::after,
+.game-line.horizontal.last::before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: black;
+  left: -25%;
+  top: -45%;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.game-line.horizontal.last::before {
+  left: 90%;
+}
+
+.game-line.vertical.filling-box::before {
+  content: "";
+  width: var(--tile-size);
+  height: var(--tile-size);
+  position: absolute;
+  top: 0;
+  left: var(--line-size);
+  pointer-events: none;
+}
+
+.game-line.vertical.filling-box.animate::before {
+  transform: scale(0);
+  animation: scaleUp var(--time-scale-up) ease-in-out forwards;
+  animation-delay: var(--box-delay, 0);
+}
+
+.game-line.vertical.filling-box.blue::before {
+  background-color: var(--box-blue);
+  border: 1px solid var(--box-blue);
+}
+
+.game-line.vertical.filling-box.red::before {
+  background-color: var(--box-red);
+  border: 1px solid var(--box-red);
+}
+
+.game-line.vertical.filling-box.last::before {
+  content: none;
+}
+
+@keyframes expandBackground {
+  from {
+    background-size: var(--final-background-size);
+  }
+  to {
+    background-size: 100% 100%;
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

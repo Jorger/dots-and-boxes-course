@@ -39,7 +39,6 @@ export interface IBoxLine {
   isComplete: boolean;
   color?: TBoardColor;
   delay: number;
-  // Para saber si ya se renderizó en la ui
   isCommit?: boolean;
 }
 
@@ -54,17 +53,12 @@ export type TStateBoxes = Record<IKeyValue, IValueBoxes>;
 export interface IValueSelectedLines {
   state: TLineState;
   color: TBoardColor;
-  // Valor para la animación en css
   delay: number;
-  // Por defecto sería false, luego cuando se hace otro evento se pasa a true
-  // y de esta manera se sabe que cuando se renderice se debe tomar este valor
-  // y no el de uiElement
   isCommit: boolean;
 }
 
 export type TSelectedLines = Record<IKeyValue, IValueSelectedLines>;
 
-// Para el estado de las líneas seleccionas en el estado..
 export type TStateLines = Record<TTypeLine, TSelectedLines>;
 
 export interface Player {
