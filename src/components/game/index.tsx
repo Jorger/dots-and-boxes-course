@@ -1,4 +1,7 @@
+import { EBoardColorWithInitial } from "../../utils/constants.ts";
 import { GameState } from "../../logic.ts";
+import { GameWrapper } from "./components/index.tsx";
+import { IBackgroud } from "../../interfaces/index.ts";
 import { useEffect, useState } from "react";
 
 const Game = () => {
@@ -21,7 +24,20 @@ const Game = () => {
     return;
   }
 
-  return <>Hello world again!</>;
+  const currentColor: IBackgroud = EBoardColorWithInitial.BLUE;
+
+  return (
+    <GameWrapper disableUI={false} currentColor={currentColor}>
+      <div>My Game!!</div>
+      <button
+        onClick={() => {
+          console.log("hello");
+        }}
+      >
+        Click me
+      </button>
+    </GameWrapper>
+  );
 };
 
 export default Game;
