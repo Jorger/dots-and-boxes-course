@@ -1,6 +1,6 @@
 import { EBoardColorWithInitial } from "../../utils/constants.ts";
 import { GameState } from "../../logic.ts";
-import { GameWrapper, Line } from "./components/index.tsx";
+import { GameWrapper, Grid } from "./components/index.tsx";
 import { IBackgroud } from "../../interfaces/index.ts";
 import { useEffect, useState } from "react";
 
@@ -28,56 +28,7 @@ const Game = () => {
 
   return (
     <GameWrapper disableUI={false} currentColor={currentColor}>
-      <Line
-        type="HORIZONTAL"
-        state="ACTIVE"
-        lineColor="BLUE"
-        baseLine={{
-          left: 100,
-          top: 200,
-          row: 0,
-          col: 0,
-        }}
-        handleSelect={(data) => {
-          console.log(data);
-        }}
-      />
-
-      <Line
-        type="HORIZONTAL"
-        state="ACTIVE"
-        lineColor="BLUE"
-        baseLine={{
-          left: 300,
-          top: 200,
-          row: 0,
-          col: 0,
-        }}
-        handleSelect={(data) => {
-          console.log(data);
-        }}
-      />
-
-      <Line
-        type="VERTICAL"
-        state="COMPLETED"
-        lineColor="RED"
-        baseLine={{
-          left: 200,
-          top: 300,
-          row: 0,
-          col: 0,
-        }}
-        box={{
-          isComplete: true,
-          color: "BLUE",
-          delay: 0,
-          isCommit: false,
-        }}
-        handleSelect={(data) => {
-          console.log(data);
-        }}
-      />
+      <Grid />
     </GameWrapper>
   );
 };

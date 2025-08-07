@@ -1,4 +1,5 @@
-import { PlayerId, RuneClient, Player as PlayerRune } from "rune-sdk";
+// RuneClient
+import { PlayerId, Player as PlayerRune } from "rune-sdk";
 import {
   EBoardColor,
   ELineState,
