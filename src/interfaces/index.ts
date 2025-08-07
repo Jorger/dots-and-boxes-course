@@ -1,5 +1,4 @@
-// RuneClient
-import { PlayerId, Player as PlayerRune } from "rune-sdk";
+import { PlayerId, RuneClient, Player as PlayerRune } from "rune-sdk";
 import {
   EBoardColor,
   ELineState,
@@ -7,9 +6,9 @@ import {
   ETypeLine,
 } from "../utils/constants";
 
-// declare global {
-//   const Rune: RuneClient<GameState, GameActions>;
-// }
+declare global {
+  const Rune: RuneClient<GameState, GameActions>;
+}
 
 export type TTypeLine = keyof typeof ETypeLine;
 export type TLineState = keyof typeof ELineState;
