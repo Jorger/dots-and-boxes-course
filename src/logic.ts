@@ -1,82 +1,57 @@
-import type { PlayerId, RuneClient } from "rune-sdk";
+import { EBoardColor, ETypeLine } from "./utils/constants";
+import { GameState, Player } from "./interfaces";
+import { randomNumber } from "./utils/randomNumber";
 
-export type Cells = (PlayerId | null)[];
-export interface GameState {
-  cells: Cells;
-  winCombo: number[] | null;
-  lastMovePlayerId: PlayerId | null;
-  playerIds: PlayerId[];
-  freeCells?: boolean;
-}
+/**
+ * Generate initial state...
+ * @param allPlayerIds
+ * @returns
+ */
+const getPlayerData = (allPlayerIds: string[]): GameState => {
+  const players: Player[] = [];
+  const initialColor = randomNumber(0, 1);
+  const colorPlayer1 = initialColor === 0 ? EBoardColor.BLUE : EBoardColor.RED;
+  const colorPlayer2 = initialColor === 0 ? EBoardColor.RED : EBoardColor.BLUE;
 
-type GameActions = {
-  claimCell: (cellIndex: number) => void;
-};
-
-declare global {
-  const Rune: RuneClient<GameState, GameActions>;
-}
-
-function findWinningCombo(cells: Cells) {
-  return (
-    [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ].find((combo) =>
-      combo.every((i) => cells[i] && cells[i] === cells[combo[0]])
-    ) || null
+  players.push(
+    {
+      playerID: allPlayerIds[0],
+      color: colorPlayer1,
+      score: 0,
+    },
+    {
+      playerID: allPlayerIds[1],
+      color: colorPlayer2,
+      score: 0,
+    }
   );
-}
+
+  const turnNumber = randomNumber(0, 1);
+  const turnID = allPlayerIds[turnNumber];
+
+  return {
+    playerIds: allPlayerIds,
+    players,
+    turnID,
+    boxes: {},
+    isGameOver: false,
+    numBoxesCompleted: 0,
+    lines: {
+      [ETypeLine.HORIZONTAL]: {},
+      [ETypeLine.VERTICAL]: {},
+    },
+  };
+};
 
 Rune.initLogic({
   minPlayers: 2,
   maxPlayers: 2,
-  setup: (allPlayerIds) => ({
-    cells: new Array(9).fill(null),
-    winCombo: null,
-    lastMovePlayerId: null,
-    playerIds: allPlayerIds,
-  }),
+  setup: (allPlayerIds) => getPlayerData(allPlayerIds),
   actions: {
-    claimCell: (cellIndex, { game, playerId, allPlayerIds }) => {
-      if (
-        game.cells[cellIndex] !== null ||
-        playerId === game.lastMovePlayerId
-      ) {
-        throw Rune.invalidAction();
-      }
-
-      game.cells[cellIndex] = playerId;
-      game.lastMovePlayerId = playerId;
-      game.winCombo = findWinningCombo(game.cells);
-
-      if (game.winCombo) {
-        const [player1, player2] = allPlayerIds;
-
-        Rune.gameOver({
-          players: {
-            [player1]: game.lastMovePlayerId === player1 ? "WON" : "LOST",
-            [player2]: game.lastMovePlayerId === player2 ? "WON" : "LOST",
-          },
-        });
-      }
-
-      game.freeCells = game.cells.findIndex((cell) => cell === null) !== -1;
-
-      if (!game.freeCells) {
-        Rune.gameOver({
-          players: {
-            [game.playerIds[0]]: "LOST",
-            [game.playerIds[1]]: "LOST",
-          },
-        });
-      }
+    onSelectLine: (line, { game, playerId, allPlayerIds }) => {
+      console.log("onSelectLine in logic");
+      console.log(line);
+      console.log({ game, playerId, allPlayerIds });
     },
   },
 });

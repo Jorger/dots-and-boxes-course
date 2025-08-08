@@ -1,11 +1,21 @@
 import "./styles.css";
 import { Line } from "..";
 import { POSITIONS } from "../../../../utils/calculatePositionsLines";
-import type { TTypeLine } from "../../../../interfaces";
+import type {
+  ISelectLine,
+  TStateBoxes,
+  TStateLines,
+  TTypeLine,
+} from "../../../../interfaces";
 import { calculateExtraProps } from "./helpers";
 
-// TODO: Pass information for lines and boxes..
-const Grid = () => (
+interface GridProps {
+  lines: TStateLines;
+  boxes: TStateBoxes;
+  handleSelect: (data: ISelectLine) => void;
+}
+
+const Grid = ({ lines, boxes, handleSelect }: GridProps) => (
   <div className="game-grid">
     {Object.keys(POSITIONS).map((type) => {
       const typeLine = type as TTypeLine;
@@ -13,8 +23,13 @@ const Grid = () => (
       return POSITIONS[typeLine].map((data) => {
         const { row, col } = data;
 
-        // TODO: Pass information for lines and boxes..
-        const extraProps = calculateExtraProps();
+        const extraProps = calculateExtraProps({
+          typeLine,
+          boxes,
+          lines,
+          row,
+          col,
+        });
 
         return (
           <Line
@@ -22,9 +37,7 @@ const Grid = () => (
             type={typeLine}
             baseLine={data}
             {...extraProps}
-            handleSelect={(data) => {
-              console.log(data);
-            }}
+            handleSelect={handleSelect}
           />
         );
       });
