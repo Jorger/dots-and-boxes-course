@@ -1,3 +1,4 @@
 import { useGameScale } from "./useGameScale";
+import { useInterval } from "./useInterval";
 
-export { useGameScale };
+export { useGameScale, useInterval };
