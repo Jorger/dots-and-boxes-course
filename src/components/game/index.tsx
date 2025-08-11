@@ -1,7 +1,9 @@
 import { getCurrentColor } from "./helpers.ts";
 import { PlayerId } from "rune-sdk";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useWait } from "../../hooks/useWait.ts";
 import {
+  COMBINED_DELAY,
   EBoardColorWithInitial,
   INITIAL_UI_INTERACTIONS,
 } from "../../utils/constants.ts";
@@ -53,9 +55,10 @@ const Game = () => {
    */
   const isGameOver = game?.isGameOver || false;
 
-  // startTimer, runEffect, delayUI
-
-  const { showCounter, startTimer } = uiInteractions;
+  /**
+   * For UI-related actions
+   */
+  const { showCounter, startTimer, runEffect, delayUI } = uiInteractions;
 
   /**
    * Effect that listens for changes in the game state,
@@ -74,9 +77,6 @@ const Game = () => {
          */
         setGame(game);
 
-        // TODO: remove console
-        console.log(game);
-
         /**
          * Indicates that it is the initial event when the game starts
          */
@@ -92,36 +92,58 @@ const Game = () => {
         }
 
         if (action?.name === "onSelectLine") {
-          // TODO: remove console
-          console.log("SELECTED LINE");
+          const delayUI = COMBINED_DELAY * game.numBoxesCompleted;
+
+          setUiInteractions({
+            showCounter: false,
+            runEffect: true,
+            delayUI,
+            disableUI: true,
+            startTimer: false,
+            isGameOver: game.isGameOver,
+          });
         }
       },
     });
   }, []);
+
+  useWait(
+    runEffect,
+    delayUI,
+    useCallback(() => {
+      setUiInteractions((current) => {
+        // TODO: Is Game over, show modal for Rune
+
+        return {
+          ...current,
+          disableUI: false,
+          startTimer: true,
+          runEffect: false,
+        };
+      });
+    }, [])
+  );
 
   if (!game) {
     // Rune only shows your game after an onChange() so no need for loading screen
     return;
   }
 
+  /**
+   * Function that runs when a user has selected a line,
+   * as long as they have the turn...
+   * @param line
+   */
   const handleSelect = (line: ISelectLine) => {
-    console.log("handleSelect: ", line);
+    if (hasTurn && !isGameOver) {
+      setUiInteractions({
+        ...uiInteractions,
+        disableUI: true,
+        startTimer: false,
+      });
 
-    // const tmp = calculateIndicesMatrix(line.row, line.col, line.type);
-    // // console.log(tmp);
-
-    // tmp.forEach((v) => {
-    //   console.log(v);
-    //   console.log(calculateLinesMatrix(v.row, v.col));
-    // });
-
-    // calculateLinesMatrix
-
-    // console.log(calculateIndicesMatrix(line.row, line.col, line.type));
-
-    // if (hasTurn && !isGameOver) {
-    //   Rune.actions.onSelectLine(line);
-    // }
+      Rune.actions.onSelectLine(line);
+    }
   };
 
   /**
