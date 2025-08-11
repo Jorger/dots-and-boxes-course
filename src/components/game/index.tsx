@@ -1,4 +1,3 @@
-import { GameWrapper, Grid, StartCounter } from "./components/index.tsx";
 import { getCurrentColor } from "./helpers.ts";
 import { PlayerId } from "rune-sdk";
 import { useEffect, useState } from "react";
@@ -6,11 +5,19 @@ import {
   EBoardColorWithInitial,
   INITIAL_UI_INTERACTIONS,
 } from "../../utils/constants.ts";
+import {
+  GameWrapper,
+  Grid,
+  OpponentThinks,
+  ShowTurn,
+  StartCounter,
+} from "./components/index.tsx";
 import type {
   GameState,
   IBackgroud,
   ISelectLine,
   IUInteractions,
+  TBoardColor,
 } from "../../interfaces/index.ts";
 
 const Game = () => {
@@ -66,6 +73,7 @@ const Game = () => {
          */
         setGame(game);
 
+        // TODO: remove console
         console.log(game);
 
         /**
@@ -83,6 +91,7 @@ const Game = () => {
         }
 
         if (action?.name === "onSelectLine") {
+          // TODO: remove console
           console.log("SELECTED LINE");
         }
       },
@@ -106,7 +115,6 @@ const Game = () => {
    * Function that is executed once the initial game count has finished
    */
   const handleEndStartCounter = () => {
-    console.log("COUNTER ENDS, ", { yourPlayerId });
     setUiInteractions({
       ...uiInteractions,
       showCounter: false,
@@ -136,7 +144,13 @@ const Game = () => {
       {showCounter && (
         <StartCounter handleEndStartCounter={handleEndStartCounter} />
       )}
+      {!showCounter && !hasTurn && (
+        <OpponentThinks currentColor={currentColor as TBoardColor} />
+      )}
       <Grid boxes={game.boxes} lines={game.lines} handleSelect={handleSelect} />
+      {!showCounter && hasTurn && (
+        <ShowTurn currentColor={currentColor as TBoardColor} />
+      )}
     </GameWrapper>
   );
 };
