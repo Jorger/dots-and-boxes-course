@@ -9,6 +9,7 @@ import {
   GameWrapper,
   Grid,
   OpponentThinks,
+  Score,
   ShowTurn,
   StartCounter,
 } from "./components/index.tsx";
@@ -54,7 +55,7 @@ const Game = () => {
 
   // startTimer, runEffect, delayUI
 
-  const { showCounter } = uiInteractions;
+  const { showCounter, startTimer } = uiInteractions;
 
   /**
    * Effect that listens for changes in the game state,
@@ -122,7 +123,11 @@ const Game = () => {
     });
   };
 
-  console.log({ turnID, yourPlayerId, hasTurn, isGameOver });
+  const handleInterval = () => {
+    if (hasTurn && !isGameOver) {
+      console.log("Random selection for ", { yourPlayerId });
+    }
+  };
 
   // If the counter is displayed, the remaining color in this case
   // is the initial background color
@@ -144,6 +149,15 @@ const Game = () => {
       {showCounter && (
         <StartCounter handleEndStartCounter={handleEndStartCounter} />
       )}
+      <Score
+        players={game.players}
+        yourPlayerId={yourPlayerId || ""}
+        turnID={turnID}
+        hasTurn={hasTurn}
+        startTimer={startTimer && !isGameOver}
+        currentColor={currentColor}
+        handleInterval={handleInterval}
+      />
       {!showCounter && !hasTurn && (
         <OpponentThinks currentColor={currentColor as TBoardColor} />
       )}
