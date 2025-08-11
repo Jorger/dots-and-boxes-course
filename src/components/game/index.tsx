@@ -107,9 +107,21 @@ const Game = () => {
   const handleSelect = (line: ISelectLine) => {
     console.log("handleSelect: ", line);
 
-    if (hasTurn && !isGameOver) {
-      Rune.actions.onSelectLine(line);
-    }
+    // const tmp = calculateIndicesMatrix(line.row, line.col, line.type);
+    // // console.log(tmp);
+
+    // tmp.forEach((v) => {
+    //   console.log(v);
+    //   console.log(calculateLinesMatrix(v.row, v.col));
+    // });
+
+    // calculateLinesMatrix
+
+    // console.log(calculateIndicesMatrix(line.row, line.col, line.type));
+
+    // if (hasTurn && !isGameOver) {
+    //   Rune.actions.onSelectLine(line);
+    // }
   };
 
   /**
