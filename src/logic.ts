@@ -20,7 +20,7 @@ import {
   TTypeLine,
 } from "./interfaces";
 
-import { TEST_DATA } from "./base_data";
+// import { TEST_DATA } from "./base_data";
 
 const lineInRange = (index = 0) => index >= 0 && index <= BOARD_SIZE;
 
@@ -51,28 +51,28 @@ const getPlayerData = (allPlayerIds: string[]): GameState => {
   const turnNumber = randomNumber(0, 1);
   const turnID = allPlayerIds[turnNumber];
 
-  // return {
-  //   playerIds: allPlayerIds,
-  //   players,
-  //   turnID,
-  //   boxes: {},
-  //   isGameOver: false,
-  //   numBoxesCompleted: 0,
-  //   lines: {
-  //     [ETypeLine.HORIZONTAL]: {},
-  //     [ETypeLine.VERTICAL]: {},
-  //   },
-  // };
-
   return {
     playerIds: allPlayerIds,
     players,
     turnID,
-    boxes: TEST_DATA.boxes,
+    boxes: {},
     isGameOver: false,
     numBoxesCompleted: 0,
-    lines: TEST_DATA.lines,
+    lines: {
+      [ETypeLine.HORIZONTAL]: {},
+      [ETypeLine.VERTICAL]: {},
+    },
   };
+
+  // return {
+  //   playerIds: allPlayerIds,
+  //   players,
+  //   turnID,
+  //   boxes: TEST_DATA.boxes,
+  //   isGameOver: false,
+  //   numBoxesCompleted: 0,
+  //   lines: TEST_DATA.lines,
+  // };
 };
 
 interface ValidateCompleteLines {

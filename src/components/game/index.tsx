@@ -1,4 +1,4 @@
-import { getCurrentColor } from "./helpers.ts";
+import { generateRandomLine, getCurrentColor } from "./helpers.ts";
 import { PlayerId } from "rune-sdk";
 import { useCallback, useEffect, useState } from "react";
 import { useWait } from "../../hooks/useWait.ts";
@@ -159,7 +159,11 @@ const Game = () => {
 
   const handleInterval = () => {
     if (hasTurn && !isGameOver) {
-      console.log("Random selection for ", { yourPlayerId });
+      const randomLine = generateRandomLine(game.lines);
+
+      if (randomLine) {
+        handleSelect(randomLine);
+      }
     }
   };
 

@@ -13,7 +13,7 @@ export const TIME_SCALE_UP = 100;
 export const TIME_EXPAND_LINE = 150;
 export const COMBINED_DELAY = TIME_SCALE_UP + TIME_EXPAND_LINE;
 export const TIME_COUNTDOWN = 10; // 500
-export const TIME_INTERVAL_CHRONOMETER = 100;
+export const TIME_INTERVAL_CHRONOMETER = 1; //100;
 export const TOTAL_LINES_COMPLETE_BOX = 4;
 
 export enum ETypeLine {
