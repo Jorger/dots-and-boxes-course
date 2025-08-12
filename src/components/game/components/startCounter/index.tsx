@@ -1,5 +1,6 @@
 import "./styles.css";
-import { TIME_COUNTDOWN } from "../../../../utils/constants";
+import { ESounds, TIME_COUNTDOWN } from "../../../../utils/constants";
+import { playSound } from "../../../../sounds";
 import { useInterval } from "../../../../hooks";
 import { useState } from "react";
 
@@ -21,7 +22,7 @@ const StartCounter = ({ handleEndStartCounter }: StartCounterProps) => {
       const newValue = counterTimer - 1;
       setCounterTimer(newValue);
 
-      // TODO: Add sounds
+      playSound(newValue < 0 ? ESounds.WHISTLE : ESounds.COUNTER);
 
       if (newValue < 0) {
         handleEndStartCounter();

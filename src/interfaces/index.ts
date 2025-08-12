@@ -115,4 +115,4 @@ export interface IUInteractions {
   delayUI: number;
 }
 
-// export type Sounds = Record<TESounds, Howl>;
+export type Sounds = Record<TESounds, Howl>;

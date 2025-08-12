@@ -1,7 +1,3 @@
-import {
-  calculateIndicesMatrix,
-  calculateLinesMatrix,
-} from "./utils/calculateIndicesMatrix";
 import { randomNumber } from "./utils/randomNumber";
 import {
   BOARD_SIZE,
@@ -12,6 +8,10 @@ import {
   TOTAL_LINES_COMPLETE_BOX,
 } from "./utils/constants";
 import {
+  calculateIndicesMatrix,
+  calculateLinesMatrix,
+} from "./utils/calculateIndicesMatrix";
+import {
   ChangeGameState,
   GameState,
   IIndicesMatrix,
@@ -20,8 +20,6 @@ import {
   TBoardColor,
   TTypeLine,
 } from "./interfaces";
-
-// import { TEST_DATA } from "./base_data";
 
 const lineInRange = (index = 0) => index >= 0 && index <= BOARD_SIZE;
 
@@ -64,16 +62,6 @@ const getPlayerData = (allPlayerIds: string[]): GameState => {
       [ETypeLine.VERTICAL]: {},
     },
   };
-
-  // return {
-  //   playerIds: allPlayerIds,
-  //   players,
-  //   turnID,
-  //   boxes: TEST_DATA.boxes,
-  //   isGameOver: false,
-  //   numBoxesCompleted: 0,
-  //   lines: TEST_DATA.lines,
-  // };
 };
 
 interface ValidateCompleteLines {
