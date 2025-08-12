@@ -1,28 +1,32 @@
-# Getting Started with Rune
+# Create Dots & Boxes with React, Powered by Rune Platform
 
-### `npm run dev`
+![dots_boxes_poster](https://github.com/user-attachments/assets/a0e5596c-7f5a-4999-b7b9-9753a943f3c3)
 
-Runs the game in Dev UI.
+This repository contains the complete source code for the Udemy course: ["Create Dots & Boxes with React, Powered by Rune Platform"](https://www.udemy.com/course/create-dots-boxes-with-react-powered-by-rune-platform)
 
-The page will reload when you make changes.
+⚠️ Important: This repository is intended for students enrolled in the course.
+If you are not taking the course, some parts of the code may not make full sense without the explanations provided in the lessons.
 
-### `npm run upload`
+## 📚 About the Course
 
-Builds the game and starts upload process to Rune.
+In this course, we build the classic Dots & Boxes game step-by-step using React and Rune Platform for multiplayer functionality.
+You’ll learn about:
 
-### `npm run build`
+* Structuring a [React](https://react.dev/) project from scratch
+* Creating interactive components
+* Managing game state effectively
+* Adding multiplayer support with [Rune Platform](https://www.rune.ai/)
+* Deploying your project for others to play
 
-Builds the game. You can then upload it to Rune using `npx rune@latest upload`.
+## 🛠 Requirements
 
-### `npm run lint`
+Before running this project, make sure you have:
 
-Runs the validation rules. You can read about them in the [docs on server-side logic](https://developers.rune.ai/docs/advanced/server-side-logic).
+* Node.js (v16+ recommended)
+* npm or yarn installed
 
-### `npm run typecheck`
+# 👨🏻‍💻 Autor.
 
-Verifies that TypeScript is valid.
+**Jorge Rubiano**
 
-
-## Learn More
-
-See the [Rune docs](https://developers.rune.ai/docs/quick-start) for more info. You can also ask any questions in the [Rune Discord](https://discord.gg/rune-devs), we're happy to help!
+* https://bio.link/jorgerub
