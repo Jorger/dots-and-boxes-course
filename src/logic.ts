@@ -8,6 +8,7 @@ import {
   EBoardColor,
   ELineState,
   ETypeLine,
+  TOTAL_BOXES,
   TOTAL_LINES_COMPLETE_BOX,
 } from "./utils/constants";
 import {
@@ -256,7 +257,19 @@ const changeGameState = ({
       game,
       delay: 1,
     });
-    // console.log("CONTINUE THE SAME USER");
+
+    // Score.
+    for (let i = 0; i < game.players.length; i++) {
+      const playerColor = game.players[i].color;
+
+      const score = Object.keys(game.boxes).filter(
+        (key) =>
+          game.boxes[key as IKeyValue].isComplete &&
+          game.boxes[key as IKeyValue].color === playerColor
+      ).length;
+
+      game.players[i].score = score;
+    }
   } else {
     const nextTurnID = allPlayerIds[currentIndex === 0 ? 1 : 0];
     game.turnID = nextTurnID;
@@ -267,6 +280,24 @@ const changeGameState = ({
       game.boxes[key as IKeyValue].isComplete &&
       !game.boxes[key as IKeyValue].isCommit
   ).length;
+
+  const totalBoxesCompleted = game.players[0].score + game.players[1].score;
+
+  game.isGameOver = totalBoxesCompleted === TOTAL_BOXES;
+
+  if (game.isGameOver) {
+    const indexWinner = game.players[0].score > game.players[1].score ? 0 : 1;
+    const winner = game.playerIds[indexWinner];
+    const loser = game.playerIds[indexWinner === 0 ? 1 : 0];
+
+    Rune.gameOver({
+      players: {
+        [winner]: "WON",
+        [loser]: "LOST",
+      },
+      delayPopUp: true,
+    });
+  }
 };
 
 Rune.initLogic({
