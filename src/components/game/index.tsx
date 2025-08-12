@@ -112,8 +112,9 @@ const Game = () => {
     delayUI,
     useCallback(() => {
       setUiInteractions((current) => {
-        // TODO: Is Game over, show modal for Rune
-
+        if (current.isGameOver) {
+          Rune.showGameOverPopUp();
+        }
         return {
           ...current,
           disableUI: false,
