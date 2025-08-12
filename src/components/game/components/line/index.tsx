@@ -1,5 +1,18 @@
 import "./styles.css";
-import React from "react";
+import { playSound } from "../../../../sounds";
+import { useWait } from "../../../../hooks";
+import {
+  BOARD_SIZE,
+  COMBINED_DELAY,
+  EBoardColor,
+  ELineState,
+  ESounds,
+  ETypeLine,
+  LINE_SIZE,
+  TILE_SIZE,
+  TIME_EXPAND_LINE,
+} from "../../../../utils/constants";
+import React, { useCallback } from "react";
 import type {
   IBaseLine,
   IBoxLine,
@@ -8,16 +21,6 @@ import type {
   TLineState,
   TTypeLine,
 } from "../../../../interfaces";
-import {
-  BOARD_SIZE,
-  COMBINED_DELAY,
-  EBoardColor,
-  ELineState,
-  ETypeLine,
-  LINE_SIZE,
-  TILE_SIZE,
-  TIME_EXPAND_LINE,
-} from "../../../../utils/constants";
 
 interface LineProps {
   type: TTypeLine;
@@ -56,7 +59,18 @@ const Line = ({
   const isBoxCompleteAnimation = isBoxComplete && !isBoxCommit;
   const delayBoxComplete = TIME_EXPAND_LINE + COMBINED_DELAY * boxDealy;
 
-  // TODO: Add sounds, Howler...
+  // Sound for line
+  useWait(
+    isLineSelected,
+    delayLineSelected,
+    useCallback(() => playSound(ESounds.STROKE), [])
+  );
+
+  useWait(
+    isBoxCompleteAnimation,
+    delayBoxComplete,
+    useCallback(() => playSound(ESounds.BOX), [])
+  );
 
   const classNameFillingBox = isBoxComplete
     ? `filling-box ${boxColor.toLowerCase()} ${!isBoxCommit ? "animate" : ""}`
