@@ -1,4 +1,7 @@
-import { calculateIndicesMatrix } from "./utils/calculateIndicesMatrix";
+import {
+  calculateIndicesMatrix,
+  calculateLinesMatrix,
+} from "./utils/calculateIndicesMatrix";
 import { randomNumber } from "./utils/randomNumber";
 import {
   BOARD_SIZE,
@@ -10,10 +13,14 @@ import {
 import {
   ChangeGameState,
   GameState,
+  IIndicesMatrix,
   IKeyValue,
   Player,
+  TBoardColor,
   TTypeLine,
 } from "./interfaces";
+
+import { TEST_DATA } from "./base_data";
 
 const lineInRange = (index = 0) => index >= 0 && index <= BOARD_SIZE;
 
@@ -44,18 +51,124 @@ const getPlayerData = (allPlayerIds: string[]): GameState => {
   const turnNumber = randomNumber(0, 1);
   const turnID = allPlayerIds[turnNumber];
 
+  // return {
+  //   playerIds: allPlayerIds,
+  //   players,
+  //   turnID,
+  //   boxes: {},
+  //   isGameOver: false,
+  //   numBoxesCompleted: 0,
+  //   lines: {
+  //     [ETypeLine.HORIZONTAL]: {},
+  //     [ETypeLine.VERTICAL]: {},
+  //   },
+  // };
+
   return {
     playerIds: allPlayerIds,
     players,
     turnID,
-    boxes: {},
+    boxes: TEST_DATA.boxes,
     isGameOver: false,
     numBoxesCompleted: 0,
-    lines: {
-      [ETypeLine.HORIZONTAL]: {},
-      [ETypeLine.VERTICAL]: {},
-    },
+    lines: TEST_DATA.lines,
   };
+};
+
+interface ValidateCompleteLines {
+  indices: IIndicesMatrix[];
+  delay: number;
+  color: TBoardColor;
+  game: GameState;
+}
+
+const validateCompleteLines = ({
+  indices,
+  delay,
+  color,
+  game,
+}: ValidateCompleteLines) => {
+  /**
+   * Lines are validated to see if there are multiple boxes being completed.
+   */
+  for (const { row: boxRow, col: boxCol } of indices) {
+    const keyBox: IKeyValue = `${boxRow}-${boxCol}`;
+
+    if (!game.boxes?.[keyBox]?.isComplete) {
+      /**
+       * Get the lines that make up the box and leave only
+       * the unoccupied lines...
+       */
+      const boxLines = calculateLinesMatrix(boxRow, boxCol).filter(
+        ({ row, col, type }) => {
+          const keyLine: IKeyValue = `${row}-${col}`;
+          return !game.lines[type][keyLine];
+        }
+      );
+
+      // The lines are iterated and it is validated whether the box can be complete...
+      for (const line of boxLines) {
+        /**
+         * Get the boxes that belong to the line...
+         */
+        const newIndices = calculateIndicesMatrix(
+          line.row,
+          line.col,
+          line.type
+        );
+
+        /**
+         * Iterate through each of the boxes and validate whether the line would complete a box
+         */
+        const lineCompleteBox =
+          newIndices.filter(({ row: newBoxRow, col: newBoxCol }) => {
+            const keyBox: IKeyValue = `${newBoxRow}-${newBoxCol}`;
+            return (
+              game.boxes?.[keyBox]?.counter === TOTAL_LINES_COMPLETE_BOX - 1
+            );
+          }).length !== 0;
+
+        if (lineCompleteBox) {
+          const keyLine: IKeyValue = `${line.row}-${line.col}`;
+
+          game.lines[line.type][keyLine] = {
+            state: ELineState.SELECTED,
+            color,
+            isCommit: false,
+            delay,
+          };
+
+          for (const { row: newBoxRow, col: newBoxCol } of newIndices) {
+            const newKeyBox: IKeyValue = `${newBoxRow}-${newBoxCol}`;
+
+            if (!game.boxes[newKeyBox]) {
+              game.boxes[newKeyBox] = {
+                counter: 0,
+                isComplete: false,
+                isCommit: false,
+                delay,
+              };
+            }
+
+            game.boxes[newKeyBox].counter++;
+
+            if (game.boxes[newKeyBox].counter === TOTAL_LINES_COMPLETE_BOX) {
+              game.boxes[newKeyBox].color = color;
+              game.boxes[newKeyBox].isComplete = true;
+              game.boxes[newKeyBox].delay = delay;
+            }
+          }
+
+          validateCompleteLines({
+            indices: newIndices,
+            delay: delay + 1,
+            color,
+            game,
+          });
+        }
+      }
+    }
+  }
 };
 
 const changeGameState = ({
@@ -80,9 +193,6 @@ const changeGameState = ({
   const currentIndex = allPlayerIds.findIndex((v) => v === playerId);
 
   let completeBox = false;
-
-  // console.log("GAME");
-  // console.log(JSON.parse(JSON.stringify(game)));
 
   for (const key in game.lines) {
     const keyDirection = key as TTypeLine;
@@ -140,7 +250,13 @@ const changeGameState = ({
   }
 
   if (completeBox) {
-    console.log("CONTINUE THE SAME USER");
+    validateCompleteLines({
+      indices,
+      color,
+      game,
+      delay: 1,
+    });
+    // console.log("CONTINUE THE SAME USER");
   } else {
     const nextTurnID = allPlayerIds[currentIndex === 0 ? 1 : 0];
     game.turnID = nextTurnID;
